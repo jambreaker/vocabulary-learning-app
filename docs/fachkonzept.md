@@ -25,42 +25,43 @@ Eine kleine Webanwendung unterstützt beim Lernen englischer Vokabeln. Lerninhal
 
 ## Fachliche Struktur der Lerninhalte
 
-Jeder Eintrag gehört zu einem Thema bzw. Vokabelbestand und wird zunächst in drei fachlichen Spalten gepflegt:
+Die Vokabeln werden exakt nach der vorgegebenen Dreispaltenstruktur gepflegt:
 
 1. **Englisch inklusive Aussprache**
-   - englisches Wort oder englischer Satz
-   - optionale phonetische Ausspracheangabe
+   - englisches Wort, Ausdruck oder englischer Satz
+   - Ausspracheangabe als Bestandteil der englischen Spalte
 2. **Deutsch**
    - deutsche Übersetzung oder Übersetzungen
 3. **Hinweis**
-   - optionaler Hinweis, der nach dem Übersetzen angezeigt werden kann
-   - kann beispielsweise ein Beispielsatz, eine grammatische Information, eine Merkhilfe oder eine zusätzliche Bedeutung enthalten
+   - optionaler Hinweis zur jeweiligen Lernkarte
+   - wird erst nach der Auflösung bzw. dem Übersetzungsversuch angezeigt
+   - ist keine eigene Lernkarte
 
-Die Aussprache wird als redaktioneller Text gespeichert. Für die erste Version ist keine automatische Spracherkennung oder automatische Aussprachegenerierung vorgesehen.
+Der Hinweis kann beispielsweise einen Beispielsatz, eine grammatische Information, eine Merkhilfe, eine zusätzliche Bedeutung oder einen Aussprachehinweis enthalten. Ein Hinweis wird immer derselben Lernkarte zugeordnet und nicht als separater Lerninhalt behandelt.
 
 ### Inhaltstypen
 
 - **Wort bzw. Ausdruck**: beispielsweise `mouse`, `different`, `on holiday`
 - **Kurzer Satz**: beispielsweise `I'm from Greenwich.`
-- **Beispiel-/Fragesatz**: ein Satz, der als Hinweis zu einem Wort oder Ausdruck angezeigt werden kann
 
-Mehrere deutsche Übersetzungen sind erlaubt, wenn sie fachlich sinnvoll sind. Die Anwendung soll Übersetzungen und Hinweise getrennt behandeln: Eine Übersetzung ist die erwartete Bedeutung, ein Hinweis ist zusätzliche Lernhilfe.
+Mehrere deutsche Übersetzungen können innerhalb der deutschen Spalte hinterlegt werden, wenn sie in der Vorlage angegeben sind. Die Anwendung unterscheidet dabei zwischen der Übersetzung als eigentlicher Lösung und dem Hinweis als zusätzlicher Information.
 
 ## Erster Vokabelbestand
 
 - Thema: `Pick-up A – I'm from Greenwich`
 - Quelle: drei bereitgestellte Fotos aus dem Ordner `/docs/`
-- Sprache der Quelle: Englisch mit deutscher Übersetzung und Ausspracheangaben
+- Sprache der Quelle: Englisch mit deutscher Übersetzung, Ausspracheangaben und Hinweisen
 - Die Daten werden vor der Speicherung redaktionell normalisiert. Offensichtliche OCR-/Transkriptionsfehler werden korrigiert; bei nicht eindeutig rekonstruierbaren Stellen bleibt eine Kennzeichnung zur manuellen Prüfung bestehen.
 
 ### Bei der Normalisierung zu beachten
 
 - IPA-/Ausspracheangaben werden von offensichtlichen OCR-Verwechslungen bereinigt, zum Beispiel `I'm` statt fehlerhaft erkanntem `Laum`.
 - Englische Schreibweisen werden korrigiert, zum Beispiel `favourite`, `squirrel`, `boating lake`, `they're` und `don't`.
-- Deutsche Übersetzungen werden orthografisch korrigiert, zum Beispiel `Mädchen`, `Englisch`, `Unterschiedlich` und `Eichhörnchen`.
+- Deutsche Übersetzungen werden orthografisch korrigiert, zum Beispiel `Mädchen`, `Englisch`, `unterschiedlich` und `Eichhörnchen`.
 - Satzzeichen, Apostrophe und Groß-/Kleinschreibung werden vereinheitlicht.
 - Hinweise aus der Vorlage wie Aussprache- oder Grammatikhinweise bleiben als optionale Hinweise erhalten und werden nicht mit der eigentlichen Übersetzung vermischt.
-- Die Vorlage enthält sowohl Lernwörter als auch vollständige Beispielsätze. Beide werden als Einträge unterstützt; ihre fachliche Rolle wird zusätzlich durch den Inhaltstyp unterschieden.
+- Die Vorlage enthält sowohl einzelne Wörter/Ausdrücke als auch vollständige Sätze. Beide werden als Lernkarten unterstützt, sofern sie in den drei Spalten als eigener Eintrag vorgegeben sind.
+- Eintrag und Hinweis werden nicht automatisch aus zusätzlichen Beispielsätzen aufgespalten: Die vorgegebene Zuordnung der drei Spalten bleibt maßgeblich.
 
 ## Noch offen – fachliche Entscheidungen
 
