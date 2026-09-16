@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import {
   loginAction,
@@ -15,7 +16,13 @@ export default function AdminLoginPage() {
   );
 
   return (
-    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-12">
+    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-4 px-4 py-12">
+      <Link
+        href="/"
+        className="self-start text-sm font-medium text-slate-600 hover:text-slate-900"
+      >
+        ← Zur Startseite
+      </Link>
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-semibold text-slate-900">
           Admin-Anmeldung
