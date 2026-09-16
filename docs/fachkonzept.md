@@ -101,17 +101,19 @@ Vor dem Start einer Lernsession wird die Lernrichtung ausgewählt. Bei einer gem
    - Englisch → Deutsch
    - zufällige Mischung beider Richtungen
 3. Optional kann die Anzahl der Karten festgelegt werden.
-4. Standardmäßig werden alle Karten des gewählten Themas verwendet.
-5. Die ausgewählten Karten werden in zufälliger Reihenfolge angezeigt.
-6. Jede Karte erscheint innerhalb einer Session höchstens einmal.
-7. Die lernende Person überlegt die Übersetzung zunächst selbst; ein Eingabefeld ist im MVP nicht erforderlich.
-8. Mit **„Auflösen“** werden die korrekte Übersetzung und – falls vorhanden – der Hinweis angezeigt.
-9. Danach bewertet sich die lernende Person selbst:
-   - **Gewusst**
-   - **Nicht gewusst**
-10. Nach der Bewertung wird automatisch die nächste Karte angezeigt.
-11. Am Ende erscheint eine Session-Zusammenfassung.
-12. Die Zusammenfassung wird im MVP nicht dauerhaft gespeichert.
+4. Die Auswahl bietet die Werte **5**, **10**, **20** und **Alle** an.
+5. Wird eine Anzahl größer als der verfügbare Bestand gewählt, werden alle verfügbaren Karten verwendet.
+6. Die ausgewählten Karten werden in zufälliger Reihenfolge angezeigt.
+7. Jede Karte erscheint innerhalb einer Session höchstens einmal.
+8. Die lernende Person überlegt die Übersetzung zunächst selbst; ein Eingabefeld ist im MVP nicht erforderlich.
+9. Mit **„Auflösen“** werden die korrekte Übersetzung und – falls vorhanden – der Hinweis angezeigt.
+10. Danach bewertet sich die lernende Person selbst:
+    - **Gewusst**
+    - **Nicht gewusst**
+11. Nach der Bewertung wird automatisch die nächste Karte angezeigt.
+12. Am Ende erscheint eine Session-Zusammenfassung.
+13. Die Zusammenfassung wird im MVP nicht dauerhaft gespeichert.
+14. Eine versehentliche Aktualisierung der Seite darf die laufende Session im MVP zurücksetzen.
 
 Beispiel für die Zusammenfassung:
 
@@ -123,7 +125,154 @@ Session abgeschlossen
 5 nicht gewusst
 ```
 
-## 8. Technologieentscheidungen für das MVP
+## 8. Technischer Entwurf
+
+### 8.1 Architektur
+
+Die Anwendung wird als gemeinsamer Monolith umgesetzt:
+
+- Next.js mit App Router
+- Lernbereich und Admin-Bereich in einer Codebasis
+- serverseitige Datenzugriffe innerhalb der Next.js-Anwendung
+- keine separate Backend-Anwendung im MVP
+- keine öffentliche, unabhängig versionierte API erforderlich
+
+### 8.2 Datenmodell
+
+#### `Topic`
+
+Repräsentiert einen Vokabelbestand bzw. ein Thema.
+
+```text
+Topic
+- id
+- title
+- description (optional)
+- createdAt
+- updatedAt
+```
+
+#### `VocabularyCard`
+
+Repräsentiert genau eine Lernkarte.
+
+```text
+VocabularyCard
+- id
+- topicId
+- englishText
+- pronunciation (optional)
+- germanTranslations
+- hint (optional)
+- createdAt
+- updatedAt
+```
+
+Beziehungen:
+
+```text
+Topic 1 ──── n VocabularyCard
+```
+
+`germanTranslations` enthält eine oder mehrere deutsche Übersetzungen. Fachlich bleiben diese Übersetzungen Teil der deutschen Spalte; technisch können sie als strukturierter Wert, beispielsweise als JSON-Array, gespeichert werden.
+
+### 8.3 Empfohlenes Prisma-Modell
+
+```prisma
+model Topic {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  cards       VocabularyCard[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model VocabularyCard {
+  id                 String   @id @default(cuid())
+  topicId            String
+  topic              Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  englishText        String
+  pronunciation      String?
+  germanTranslations Json
+  hint               String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([topicId])
+}
+```
+
+Das Prisma-Modell ist ein Planungsstand und muss bei der Implementierung gegen die verwendete Prisma-Version und SQLite-Unterstützung geprüft werden. Falls JSON-Arrays in der konkreten Umgebung nicht passend unterstützt werden, kann die deutsche Übersetzung alternativ als einzelner strukturierter Textwert mit einem klar definierten Trenn- bzw. Importformat oder als separate Relation modelliert werden.
+
+### 8.4 Session-Zustand
+
+Der Zustand einer laufenden Session wird zunächst nur temporär verwaltet:
+
+```text
+LearningSession
+- topicId
+- direction
+- cards
+- currentCardIndex
+- revealed
+- results
+```
+
+Mögliche Richtungen:
+
+```text
+GERMAN_TO_ENGLISH
+ENGLISH_TO_GERMAN
+MIXED
+```
+
+Für eine gemischte Session wird die konkrete Richtung je Karte festgelegt:
+
+```text
+CardInSession
+- cardId
+- direction
+```
+
+Bewertung:
+
+```text
+KNOWN
+UNKNOWN
+```
+
+Der Zustand wird im MVP nicht dauerhaft in der Datenbank gespeichert. Ein Browser-Refresh darf die Session verlieren.
+
+## 9. Seiten- und Routenstruktur
+
+```text
+/
+├── /learn
+├── /learn/setup
+├── /learn/session
+├── /learn/result
+├── /admin/login
+├── /admin
+├── /admin/topics/[topicId]
+├── /admin/cards/new
+└── /admin/cards/[cardId]/edit
+```
+
+### Seiten
+
+- `/` – Startseite
+- `/learn` – Auswahl eines Themas
+- `/learn/setup` – Lernrichtung und Kartenanzahl
+- `/learn/session` – aktuelle Lernkarte
+- `/learn/result` – Session-Ergebnis
+- `/admin/login` – Admin-Anmeldung
+- `/admin` – Themenübersicht
+- `/admin/topics/[topicId]` – Lernkarten eines Themas
+- `/admin/cards/new` – neue Lernkarte anlegen
+- `/admin/cards/[cardId]/edit` – Lernkarte bearbeiten
+
+## 10. Technologieentscheidungen für das MVP
 
 - **Framework:** Next.js mit App Router
 - **Programmiersprache:** TypeScript
@@ -133,11 +282,12 @@ Session abgeschlossen
 - **Architektur:** gemeinsamer Monolith für Lernbereich und Admin-Bereich
 - **Backend:** keine separate Backend-Anwendung im MVP
 - **Strukturierte Speicherung:** Lernkarten werden in der Datenbank gespeichert und nicht im Anwendungscode hardcodiert
+- **Initialer Datenimport:** Seed- oder Import-Skript für den ersten Vokabelbestand
 - **Erweiterbarkeit:** Ein späterer Wechsel auf PostgreSQL und die Ergänzung einer Benutzerverwaltung sollen möglich bleiben
 
 SQLite wird für die lokale Entwicklung und den kleinen ersten Bestand verwendet. Bei der späteren Bereitstellung muss sichergestellt werden, dass die Datenbank dauerhaft gespeichert wird und nicht bei jedem neuen Deployment verloren geht.
 
-## 9. Authentifizierung und Berechtigungen
+## 11. Authentifizierung und Berechtigungen
 
 Für den MVP wird ein einzelner Admin-Zugang verwendet:
 
@@ -151,9 +301,9 @@ Für den MVP wird ein einzelner Admin-Zugang verwendet:
 - Admin-Seiten sind nur nach erfolgreicher Anmeldung zugänglich
 - Lernende benötigen keinen Login
 
-## 10. UI/UX-Entscheidungen
+## 12. UI/UX-Entscheidungen
 
-### 10.1 Grundprinzipien
+### 12.1 Grundprinzipien
 
 - **Mobile first**
 - Unterstützung für Smartphone, Tablet und Desktop
@@ -170,7 +320,7 @@ Für den MVP wird ein einzelner Admin-Zugang verwendet:
 
 Der visuelle Stil soll wie ein ruhiges Lernwerkzeug wirken und nicht wie ein überladenes Spiel. Vorgesehen sind ein heller Hintergrund, eine dezente blaue oder violette Akzentfarbe und eine zentral platzierte Lernkarte mit abgerundeten Ecken.
 
-### 10.2 Startseite
+### 12.2 Startseite
 
 Die Startseite enthält nur die wichtigsten Aktionen:
 
@@ -179,18 +329,18 @@ Die Startseite enthält nur die wichtigsten Aktionen:
 - Button **„Lernen starten“**
 - Button **„Admin-Bereich“** für berechtigte Personen
 
-### 10.3 Lernkonfiguration
+### 12.3 Lernkonfiguration
 
 Vor Beginn einer Session können ausgewählt werden:
 
 - Thema bzw. Vokabelbestand
 - Lernrichtung
-- Kartenanzahl
+- Kartenanzahl: **5**, **10**, **20** oder **Alle**
 - Button **„Lernen beginnen“**
 
 Im MVP wird zunächst genau ein Thema pro Session ausgewählt. Die Themenstruktur wird einfach gehalten; weitere Unterteilungen können später ergänzt werden. Freie Tags sind für den ersten festen Vokabelbestand nicht erforderlich.
 
-### 10.4 Lernkarte vor der Auflösung
+### 12.4 Lernkarte vor der Auflösung
 
 Beispiel für Englisch → Deutsch:
 
@@ -225,7 +375,7 @@ Deutsch → Englisch
 
 Die jeweils nicht benötigte Sprachseite wird vor der Auflösung nicht angezeigt.
 
-### 10.5 Lernkarte nach der Auflösung
+### 12.5 Lernkarte nach der Auflösung
 
 ```text
 Lösung:
@@ -242,7 +392,7 @@ Hinweis:
 
 Der Hinweis wird nur angezeigt, wenn für die Lernkarte ein Hinweis gespeichert ist.
 
-### 10.6 Fortschrittsanzeige
+### 12.6 Fortschrittsanzeige
 
 Während der Session werden angezeigt:
 
@@ -250,7 +400,7 @@ Während der Session werden angezeigt:
 - visueller Fortschrittsbalken
 - optional die aktuelle Anzahl der Bewertungen „Gewusst“ und „Nicht gewusst“
 
-### 10.7 Navigation während des Lernens
+### 12.7 Navigation während des Lernens
 
 - Der Lernbereich besitzt keinen permanent sichtbaren Navigationsbereich.
 - Eine Option **„Session beenden“** ist verfügbar.
@@ -258,7 +408,7 @@ Während der Session werden angezeigt:
 - Die Browser-Zurück-Navigation soll kontrolliert behandelt werden.
 - Nach der Bewertung wird automatisch die nächste Karte angezeigt.
 
-### 10.8 Session-Ergebnis
+### 12.8 Session-Ergebnis
 
 Am Ende werden angezeigt:
 
@@ -268,9 +418,9 @@ Am Ende werden angezeigt:
 - Button **„Nochmal lernen“**
 - Button **„Zur Startseite“**
 
-### 10.9 Admin-Bereich
+### 12.9 Admin-Bereich
 
-Der Admin-Bereich umfasst zunächst drei Ansichten:
+Der Admin-Bereich umfasst zunächst diese Ansichten:
 
 1. **Themenübersicht**
    - Liste der Vokabelbestände
@@ -281,19 +431,50 @@ Der Admin-Bereich umfasst zunächst drei Ansichten:
    - Englisch inklusive Aussprache
    - Deutsch
    - Hinweis vorhanden: Ja/Nein
+   - neue Karte anlegen
    - Bearbeiten
    - Löschen
-3. **Lernkarte bearbeiten**
+3. **Lernkarte anlegen/bearbeiten**
    - englischer Inhalt
    - Aussprache
-   - deutsche Übersetzung bzw. Übersetzungen
+   - standardmäßig ein Feld für eine deutsche Übersetzung
+   - Möglichkeit, weitere Übersetzungsfelder hinzuzufügen
    - Hinweis
    - Speichern
    - Abbrechen
 
 Destruktive Aktionen wie Löschen erfordern eine Bestätigung. Fehlermeldungen werden direkt am jeweiligen Eingabefeld angezeigt.
 
-## 11. Nicht Bestandteil des MVP
+## 13. Datenimport und redaktioneller Workflow
+
+Der erste Vokabelbestand wird aus den drei Fotos redaktionell in strukturierte Importdaten überführt. Ein Importdatensatz enthält mindestens:
+
+```json
+{
+  "topic": {
+    "title": "Pick-up A – I'm from Greenwich",
+    "description": "Vokabeln aus dem aktuellen Schulstoff"
+  },
+  "cards": [
+    {
+      "englishText": "I'm from Greenwich.",
+      "pronunciation": "[Ausspracheangabe]",
+      "germanTranslations": ["Ich bin aus Greenwich."],
+      "hint": null
+    }
+  ]
+}
+```
+
+Grundsätze:
+
+- Importdaten werden vor dem Import geprüft.
+- Offensichtliche Transkriptionsfehler werden korrigiert.
+- Die Dreispaltenzuordnung aus der Vorlage bleibt erhalten.
+- Hinweise werden nicht als eigene Lernkarten importiert.
+- Die Daten werden nach dem Import zusätzlich über den Admin-Bereich pflegbar.
+
+## 14. Nicht Bestandteil des MVP
 
 Die folgenden Funktionen werden zunächst nicht umgesetzt:
 
@@ -309,8 +490,9 @@ Die folgenden Funktionen werden zunächst nicht umgesetzt:
 - gleichzeitige Auswahl mehrerer Themen
 - umfangreiche Rollen- und Rechteverwaltung
 - Registrierung und Benutzerverwaltung
+- dauerhaftes Speichern einer laufenden Session
 
-## 12. Noch offen – bewusst zurückgestellt
+## 15. Noch offen – bewusst zurückgestellt
 
 Die folgenden Punkte wurden nicht weiter fachlich detailliert und bleiben für eine spätere Phase offen:
 
@@ -318,19 +500,21 @@ Die folgenden Punkte wurden nicht weiter fachlich detailliert und bleiben für e
 2. Benutzerkonten und persönlicher Lernfortschritt
 3. Freigabe- und Veröffentlichungsstatus von Inhalten
 4. Umgang mit Audio und automatischer Sprachausgabe
-5. konkrete Datenbanktabellen und Feldtypen im technischen Datenmodell
+5. konkrete technische Umsetzung der Admin-Session und Cookie-Sicherheit
 6. detaillierter Umgang mit unklaren oder mehrfach möglichen Übersetzungen
-7. Verhalten bei einer Kartenanzahl, die größer als die Anzahl verfügbarer Karten ist
+7. konkrete Prisma-/SQLite-Unterstützung für Übersetzungs-Arrays
+8. konkretes Deployment mit dauerhaftem Datenbank-Storage
 
-## 13. Nächster Planungsschritt
+## 16. Nächster Planungsschritt
 
-Als nächstes soll ein konkreter technischer Entwurf erstellt werden:
+Als nächstes kann die technische Umsetzung vorbereitet werden:
 
-- Datenmodell für Themen und Lernkarten
-- Prisma-Schema
-- Seiten- und Routenstruktur
-- Komponentenstruktur
-- Session-Zustand für den Lernablauf
-- Admin-Login und Zugriffsschutz
-- Importformat für den ersten Vokabelbestand
-- UI-Wireframes für Startseite, Konfiguration, Lernkarte, Ergebnis und Admin-Bereich
+- Next.js-Projektstruktur anlegen
+- Prisma-Schema und Migration erstellen
+- Seed-/Importdaten für den ersten Vokabelbestand erstellen
+- Seiten und Routen anlegen
+- Lernsession-Komponenten umsetzen
+- Admin-Login und Zugriffsschutz umsetzen
+- Admin-CRUD für Themen und Lernkarten umsetzen
+- UI-Wireframes in responsive Komponenten übertragen
+- Tests für Lernsession, Übersetzungsvarianten und Admin-Zugriff ergänzen
