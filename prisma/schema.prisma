@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Ein Vokabelbestand bzw. Thema (z.B. "Pick-up A - I'm from Greenwich").
+model Topic {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  cards       VocabularyCard[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+/// Genau eine Lernkarte innerhalb eines Themas.
+model VocabularyCard {
+  id          String   @id @default(cuid())
+  topicId     String
+  topic       Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  englishText String
+  pronunciation String?
+  /// Eine oder mehrere deutsche Übersetzungen, gespeichert als JSON-Array von Strings.
+  germanTranslations Json
+  hint        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([topicId])
+}
