@@ -2,138 +2,335 @@
 
 > Arbeitsdokument für gemeinsam getroffene Entscheidungen. Offene Punkte bleiben ausdrücklich als offene Fragen markiert.
 
-## Ziel
+## 1. Ziel und Zweck
 
-Eine kleine Webanwendung unterstützt beim Lernen englischer Vokabeln. Lerninhalte reichen von einzelnen Wörtern bis zu kurzen Sätzen. Die Inhalte werden strukturiert gespeichert und über einen einfachen Admin-Bereich gepflegt.
+Eine kleine Webanwendung unterstützt beim Lernen englischer Vokabeln. Lerninhalte reichen von einzelnen Wörtern und Ausdrücken bis zu kurzen englischen Sätzen. Die Inhalte werden strukturiert gespeichert und können über einen einfachen Admin-Bereich gepflegt werden.
 
-## Bisher festgelegt
+Die Anwendung soll zunächst klein, übersichtlich und auf den konkreten Schulstoff ausgerichtet sein. Die Architektur und das Datenmodell sollen spätere Erweiterungen ermöglichen, ohne den MVP unnötig komplex zu machen.
 
-- Lernsprache: Englisch.
-- Lerninhalte: einzelne Wörter und kurze englische Sätze.
-- Inhalte werden strukturiert gespeichert und nicht im Anwendungscode hardcodiert.
-- Es gibt einen möglichst einfachen Admin-Bereich zur Pflege der Inhalte.
-- Die Anwendung soll zunächst klein und überschaubar bleiben.
-- Die Anwendung wird zunächst so geplant, dass später mehrere Lernende möglich sind, ohne diese Funktion im MVP vollständig umzusetzen.
-- Beide Lernrichtungen werden unterstützt:
-  - Deutsch → Englisch
-  - Englisch → Deutsch
-- Vor dem Start einer Lernsession wählt die lernende Person die Richtung aus.
-- Zusätzlich gibt es eine Option für eine zufällige Mischung beider Richtungen innerhalb einer Lernsession.
-- Zu Beginn wird ausschließlich mit einem festen, vorgegebenen Vokabelbestand gearbeitet.
-- Der erste Vokabelbestand stammt aus dem Schulstoff zum Thema **„Pick-up A – I'm from Greenwich“**.
-- Weitere Vokabelbestände und Themen sollen später ergänzt werden können.
+## 2. Zielgruppe und Nutzungskontext
 
-## Fachliche Struktur der Lerninhalte
+- Die Anwendung wird zunächst für einen festen, vorgegebenen Vokabelbestand konzipiert.
+- Eine konkrete Mehrbenutzerverwaltung ist im MVP noch nicht erforderlich.
+- Die Anwendung soll fachlich so vorbereitet werden, dass später mehrere Lernende mit eigenem Lernfortschritt unterstützt werden können.
+- Lernende benötigen im MVP kein Benutzerkonto.
+- Der Admin-Bereich ist nur für berechtigte Personen zugänglich.
+
+## 3. Lerninhalte und Vokabelbestand
+
+Zu Beginn wird ausschließlich mit einem festen, vorgegebenen Vokabelbestand gearbeitet. Der erste Bestand stammt aus dem Schulstoff zum Thema:
+
+> **Pick-up A – I'm from Greenwich**
+
+Die Vokabeln werden nicht im Anwendungscode hardcodiert, sondern als strukturierte Daten gespeichert. Weitere Vokabelbestände und Themen sollen später ergänzt werden können.
+
+Quelle des ersten Bestands sind drei bereitgestellte Fotos im Verzeichnis `/docs/`:
+
+- `docs/IMG_4597.jpeg`
+- `docs/IMG_4598.jpeg`
+- `docs/IMG_4599.jpeg`
+
+Die Daten werden vor der Speicherung redaktionell normalisiert. Offensichtliche OCR- und Transkriptionsfehler werden korrigiert. Bei nicht eindeutig rekonstruierbaren Stellen ist eine manuelle Prüfung erforderlich.
+
+## 4. Fachliche Struktur einer Lernkarte
 
 Die Vokabeln werden exakt nach der vorgegebenen Dreispaltenstruktur gepflegt:
 
-1. **Englisch inklusive Aussprache**
-   - englisches Wort, Ausdruck oder englischer Satz
-   - Ausspracheangabe als Bestandteil der englischen Spalte
-2. **Deutsch**
-   - deutsche Übersetzung oder Übersetzungen
-3. **Hinweis**
-   - optionaler Hinweis zur jeweiligen Lernkarte
-   - wird erst nach der Auflösung bzw. dem Übersetzungsversuch angezeigt
-   - ist keine eigene Lernkarte
+### 4.1 Englisch inklusive Aussprache
 
-Der Hinweis kann beispielsweise einen Beispielsatz, eine grammatische Information, eine Merkhilfe, eine zusätzliche Bedeutung oder einen Aussprachehinweis enthalten. Ein Hinweis wird immer derselben Lernkarte zugeordnet und nicht als separater Lerninhalt behandelt.
+- Englisches Wort, englischer Ausdruck oder kurzer englischer Satz
+- Ausspracheangabe als Bestandteil der englischen Spalte
+- Die Aussprache wird technisch separat gespeichert, im Admin-Bereich aber unter der fachlichen Spalte „Englisch inklusive Aussprache“ gruppiert.
 
-### Inhaltstypen
+### 4.2 Deutsch
 
-- **Wort bzw. Ausdruck**: beispielsweise `mouse`, `different`, `on holiday`
-- **Kurzer Satz**: beispielsweise `I'm from Greenwich.`
+- Deutsche Übersetzung oder mehrere deutsche Übersetzungen
+- Mehrere in der Vorlage angegebene Übersetzungsvarianten können innerhalb derselben deutschen Spalte gespeichert werden.
 
-Mehrere deutsche Übersetzungen können innerhalb der deutschen Spalte hinterlegt werden, wenn sie in der Vorlage angegeben sind. Die Anwendung unterscheidet dabei zwischen der Übersetzung als eigentlicher Lösung und dem Hinweis als zusätzlicher Information.
+### 4.3 Hinweis
 
-## Erster Vokabelbestand
+- Optionaler Hinweis zur jeweiligen Lernkarte
+- Keine eigene Lernkarte
+- Wird erst nach der Auflösung bzw. nach dem eigenen Übersetzungsversuch angezeigt
+- Kann beispielsweise einen Beispielsatz, eine grammatische Information, eine Merkhilfe, eine zusätzliche Bedeutung oder einen Aussprachehinweis enthalten
+- Wird immer genau der zugehörigen Lernkarte zugeordnet
 
-- Thema: `Pick-up A – I'm from Greenwich`
-- Quelle: drei bereitgestellte Fotos aus dem Ordner `/docs/`
-- Sprache der Quelle: Englisch mit deutscher Übersetzung, Ausspracheangaben und Hinweisen
-- Die Daten werden vor der Speicherung redaktionell normalisiert. Offensichtliche OCR-/Transkriptionsfehler werden korrigiert; bei nicht eindeutig rekonstruierbaren Stellen bleibt eine Kennzeichnung zur manuellen Prüfung bestehen.
+Die Zuordnung aus den drei Spalten der Vorlage bleibt maßgeblich. Inhalte werden nicht automatisch aufgrund zusätzlicher Beispielsätze in weitere Lernkarten aufgespalten.
 
-### Bei der Normalisierung zu beachten
+### 4.4 Inhaltstypen
 
-- IPA-/Ausspracheangaben werden von offensichtlichen OCR-Verwechslungen bereinigt, zum Beispiel `I'm` statt fehlerhaft erkanntem `Laum`.
-- Englische Schreibweisen werden korrigiert, zum Beispiel `favourite`, `squirrel`, `boating lake`, `they're` und `don't`.
-- Deutsche Übersetzungen werden orthografisch korrigiert, zum Beispiel `Mädchen`, `Englisch`, `unterschiedlich` und `Eichhörnchen`.
-- Satzzeichen, Apostrophe und Groß-/Kleinschreibung werden vereinheitlicht.
-- Hinweise aus der Vorlage wie Aussprache- oder Grammatikhinweise bleiben als optionale Hinweise erhalten und werden nicht mit der eigentlichen Übersetzung vermischt.
-- Die Vorlage enthält sowohl einzelne Wörter/Ausdrücke als auch vollständige Sätze. Beide werden als Lernkarten unterstützt, sofern sie in den drei Spalten als eigener Eintrag vorgegeben sind.
-- Eintrag und Hinweis werden nicht automatisch aus zusätzlichen Beispielsätzen aufgespalten: Die vorgegebene Zuordnung der drei Spalten bleibt maßgeblich.
+- **Wort oder Ausdruck**, beispielsweise `mouse`, `different` oder `on holiday`
+- **Kurzer Satz**, beispielsweise `I'm from Greenwich.`
 
-## Ablauf einer Lernsession
+Beide Inhaltstypen werden als Lernkarten unterstützt, sofern sie in den drei vorgegebenen Spalten als eigenständiger Eintrag enthalten sind.
+
+## 5. Normalisierung der gelieferten Vokabeln
+
+Bei der redaktionellen Übertragung werden unter anderem folgende Fehler korrigiert:
+
+- `Laum from 'grenids]` → `I'm from Greenwich.`
+- `Im English.` → `I'm English.`
+- `unterchiedlich` → `unterschiedlich`
+- `Pla` → `Pia`
+- `ein Madchen` → `ein Mädchen`
+- `Klike the boating lake.` → `I like the boating lake.`
+- `They re my friends.` → `They're my friends.`
+- `öer daunt it 'mais]` → `They don't eat mice.`
+- OCR-Fehler in `cycling`, `football`, `squirrel`, `favourite` und `boating lake`
+- fehlerhafte Groß-/Kleinschreibung, Satzzeichen und Apostrophe
+
+Ausspracheangaben werden als redaktionelle Textangaben übernommen und von offensichtlichen OCR-Verwechslungen bereinigt. Eine automatische Spracherkennung oder automatische Aussprachegenerierung ist für das MVP nicht vorgesehen.
+
+Reine Grammatik- oder Ausspracheerklärungen werden nicht als eigene Lernkarten gespeichert, sondern – sofern sie einer Karte zugeordnet werden können – als Hinweise hinterlegt.
+
+## 6. Lernrichtungen
+
+Die Anwendung unterstützt beide Lernrichtungen:
+
+- **Deutsch → Englisch**
+- **Englisch → Deutsch**
+- **Gemischt:** zufällige Auswahl einer der beiden Richtungen pro Karte
+
+Vor dem Start einer Lernsession wird die Lernrichtung ausgewählt. Bei einer gemischten Session wird die Richtung für jede einzelne Karte zufällig bestimmt und auf der Karte sichtbar angezeigt.
+
+## 7. Ablauf einer Lernsession
 
 1. Die lernende Person wählt ein Thema bzw. einen Vokabelbestand aus.
 2. Sie wählt die Lernrichtung:
    - Deutsch → Englisch
    - Englisch → Deutsch
    - zufällige Mischung beider Richtungen
-3. Optional kann die Anzahl der Karten festgelegt werden. Standardmäßig werden alle Karten des gewählten Themas verwendet.
-4. Die Karten werden in zufälliger Reihenfolge angezeigt.
-5. Die lernende Person überlegt die Übersetzung zunächst selbst und gibt sie im MVP nicht zwingend in ein Eingabefeld ein.
-6. Mit **„Auflösen“** werden die korrekte Übersetzung und – falls vorhanden – der Hinweis angezeigt.
-7. Die lernende Person bewertet sich selbst mit:
+3. Optional kann die Anzahl der Karten festgelegt werden.
+4. Standardmäßig werden alle Karten des gewählten Themas verwendet.
+5. Die ausgewählten Karten werden in zufälliger Reihenfolge angezeigt.
+6. Jede Karte erscheint innerhalb einer Session höchstens einmal.
+7. Die lernende Person überlegt die Übersetzung zunächst selbst; ein Eingabefeld ist im MVP nicht erforderlich.
+8. Mit **„Auflösen“** werden die korrekte Übersetzung und – falls vorhanden – der Hinweis angezeigt.
+9. Danach bewertet sich die lernende Person selbst:
    - **Gewusst**
    - **Nicht gewusst**
-8. Danach wird die nächste Karte angezeigt.
-9. Jede Karte erscheint innerhalb einer Session höchstens einmal.
-10. Am Ende wird eine einfache Zusammenfassung angezeigt, beispielsweise die Anzahl der Karten sowie die Anzahl der gewussten und nicht gewussten Antworten. Diese Zusammenfassung wird im MVP nicht dauerhaft gespeichert.
+10. Nach der Bewertung wird automatisch die nächste Karte angezeigt.
+11. Am Ende erscheint eine Session-Zusammenfassung.
+12. Die Zusammenfassung wird im MVP nicht dauerhaft gespeichert.
 
-## Technologieentscheidungen für das MVP
+Beispiel für die Zusammenfassung:
+
+```text
+Session abgeschlossen
+
+20 Karten gelernt
+15 gewusst
+5 nicht gewusst
+```
+
+## 8. Technologieentscheidungen für das MVP
 
 - **Framework:** Next.js mit App Router
 - **Programmiersprache:** TypeScript
 - **Styling:** Tailwind CSS
 - **Datenzugriff:** Prisma ORM
 - **Datenbank:** SQLite für den Start
-- **Architektur:** gemeinsamer Monolith für Lernbereich und Admin-Bereich; keine separate Backend-Anwendung im MVP
-- **Strukturierte Speicherung:** Vokabeln werden in der Datenbank gespeichert und nicht im Anwendungscode hardcodiert
+- **Architektur:** gemeinsamer Monolith für Lernbereich und Admin-Bereich
+- **Backend:** keine separate Backend-Anwendung im MVP
+- **Strukturierte Speicherung:** Lernkarten werden in der Datenbank gespeichert und nicht im Anwendungscode hardcodiert
 - **Erweiterbarkeit:** Ein späterer Wechsel auf PostgreSQL und die Ergänzung einer Benutzerverwaltung sollen möglich bleiben
 
-## UI/UX-Entscheidungen für das MVP
+SQLite wird für die lokale Entwicklung und den kleinen ersten Bestand verwendet. Bei der späteren Bereitstellung muss sichergestellt werden, dass die Datenbank dauerhaft gespeichert wird und nicht bei jedem neuen Deployment verloren geht.
 
-- Die Anwendung wird **mobile first** gestaltet und soll auf Smartphone, Tablet und Desktop funktionieren.
-- Der Lernbereich verwendet einen klaren Schritt-für-Schritt-Ablauf mit einer Lernkarte pro Bildschirm.
-- Die Startseite enthält die wichtigsten Aktionen:
-  - Anwendungstitel und kurze Erklärung
-  - **„Lernen starten“**
-  - **„Admin-Bereich“** für berechtigte Personen
-- Vor einer Session werden Thema, Lernrichtung und optional die Kartenanzahl ausgewählt.
-- Während des Lernens werden die Abfrage, der Fortschritt und die zentrale Aktion **„Auflösen“** übersichtlich dargestellt.
-- Nach dem Auflösen werden Übersetzung und – falls vorhanden – der Hinweis angezeigt.
-- Die Lernkarte bietet anschließend die Aktionen **„Gewusst“** und **„Nicht gewusst“**.
-- Am Ende wird eine Session-Zusammenfassung mit Kartenanzahl sowie gewussten und nicht gewussten Antworten angezeigt.
-- Lernende benötigen im MVP kein Benutzerkonto.
-- Der Admin-Bereich ist durch einen einfachen Login geschützt.
-- Der Admin-Bereich umfasst zunächst:
-  1. Themenübersicht mit Anzahl der Lernkarten
-  2. Lernkartenübersicht mit Englisch, Deutsch und Hinweisstatus
-  3. Bearbeitungsformular für Englisch inklusive Aussprache, Deutsch und Hinweis
-- Die Aussprache wird technisch separat gespeichert, im Admin-Bereich aber unter der ersten fachlichen Spalte „Englisch inklusive Aussprache“ gruppiert.
-- Das Design verwendet große, gut lesbare Schrift, klare Primäraktionen, ausreichenden Kontrast und große Touch-Ziele.
-- Die Bedienung soll per Tastatur und Touch möglich sein.
-- Der Lernbereich bleibt frei von überflüssigen Animationen.
-- Löschen im Admin-Bereich erfordert eine Bestätigung.
+## 9. Authentifizierung und Berechtigungen
 
-## Noch offen – fachliche Entscheidungen
+Für den MVP wird ein einzelner Admin-Zugang verwendet:
 
-1. Organisation der Inhalte, zum Beispiel Themen, Kapitel, Niveau und Tags
+- Login-Seite unter `/admin/login`
+- ein Benutzerkonto
+- keine Registrierung
+- keine Benutzerverwaltung
+- Benutzername und Passwort werden ausschließlich über Umgebungsvariablen konfiguriert
+- Zugangsdaten werden nicht im Quellcode gespeichert
+- nach erfolgreichem Login wird eine geschützte Session über ein Cookie verwendet
+- Admin-Seiten sind nur nach erfolgreicher Anmeldung zugänglich
+- Lernende benötigen keinen Login
+
+## 10. UI/UX-Entscheidungen
+
+### 10.1 Grundprinzipien
+
+- **Mobile first**
+- Unterstützung für Smartphone, Tablet und Desktop
+- ruhiges, helles und schulgeeignetes Design
+- große, gut lesbare Schrift
+- klare Primäraktionen
+- ausreichender Farbkontrast
+- große Touch-Ziele
+- Bedienung per Tastatur und Touch
+- keine überflüssigen Animationen im Lernfluss
+- Informationen dürfen nicht ausschließlich über Farben vermittelt werden
+- sichtbarer Fokus bei Tastaturbedienung
+- logisch sortierte Tab-Reihenfolge
+
+Der visuelle Stil soll wie ein ruhiges Lernwerkzeug wirken und nicht wie ein überladenes Spiel. Vorgesehen sind ein heller Hintergrund, eine dezente blaue oder violette Akzentfarbe und eine zentral platzierte Lernkarte mit abgerundeten Ecken.
+
+### 10.2 Startseite
+
+Die Startseite enthält nur die wichtigsten Aktionen:
+
+- Anwendungstitel
+- kurze Erklärung
+- Button **„Lernen starten“**
+- Button **„Admin-Bereich“** für berechtigte Personen
+
+### 10.3 Lernkonfiguration
+
+Vor Beginn einer Session können ausgewählt werden:
+
+- Thema bzw. Vokabelbestand
+- Lernrichtung
+- Kartenanzahl
+- Button **„Lernen beginnen“**
+
+Im MVP wird zunächst genau ein Thema pro Session ausgewählt. Die Themenstruktur wird einfach gehalten; weitere Unterteilungen können später ergänzt werden. Freie Tags sind für den ersten festen Vokabelbestand nicht erforderlich.
+
+### 10.4 Lernkarte vor der Auflösung
+
+Beispiel für Englisch → Deutsch:
+
+```text
+Karte 4 von 20
+
+Übersetzung von:
+
+I'm from Greenwich.
+Aussprache: [Ausspracheangabe]
+
+[Auflösen]
+```
+
+Beispiel für Deutsch → Englisch:
+
+```text
+Karte 4 von 20
+
+Übersetzung von:
+
+Ich bin aus Greenwich.
+
+[Auflösen]
+```
+
+Bei einer gemischten Session wird die Richtung der jeweiligen Karte sichtbar angezeigt, beispielsweise:
+
+```text
+Deutsch → Englisch
+```
+
+Die jeweils nicht benötigte Sprachseite wird vor der Auflösung nicht angezeigt.
+
+### 10.5 Lernkarte nach der Auflösung
+
+```text
+Lösung:
+
+I'm from Greenwich.
+Aussprache: [Ausspracheangabe]
+
+Hinweis:
+
+[optionaler Hinweis]
+
+[Gewusst]       [Nicht gewusst]
+```
+
+Der Hinweis wird nur angezeigt, wenn für die Lernkarte ein Hinweis gespeichert ist.
+
+### 10.6 Fortschrittsanzeige
+
+Während der Session werden angezeigt:
+
+- aktuelle Kartennummer und Gesamtanzahl, beispielsweise `Karte 4 von 20`
+- visueller Fortschrittsbalken
+- optional die aktuelle Anzahl der Bewertungen „Gewusst“ und „Nicht gewusst“
+
+### 10.7 Navigation während des Lernens
+
+- Der Lernbereich besitzt keinen permanent sichtbaren Navigationsbereich.
+- Eine Option **„Session beenden“** ist verfügbar.
+- Beim vorzeitigen Verlassen wird gewarnt.
+- Die Browser-Zurück-Navigation soll kontrolliert behandelt werden.
+- Nach der Bewertung wird automatisch die nächste Karte angezeigt.
+
+### 10.8 Session-Ergebnis
+
+Am Ende werden angezeigt:
+
+- Anzahl gelernter Karten
+- Anzahl „Gewusst“
+- Anzahl „Nicht gewusst“
+- Button **„Nochmal lernen“**
+- Button **„Zur Startseite“**
+
+### 10.9 Admin-Bereich
+
+Der Admin-Bereich umfasst zunächst drei Ansichten:
+
+1. **Themenübersicht**
+   - Liste der Vokabelbestände
+   - vollständiger Themenname
+   - kurze Beschreibung, sofern vorhanden
+   - Anzahl der Lernkarten
+2. **Lernkartenübersicht**
+   - Englisch inklusive Aussprache
+   - Deutsch
+   - Hinweis vorhanden: Ja/Nein
+   - Bearbeiten
+   - Löschen
+3. **Lernkarte bearbeiten**
+   - englischer Inhalt
+   - Aussprache
+   - deutsche Übersetzung bzw. Übersetzungen
+   - Hinweis
+   - Speichern
+   - Abbrechen
+
+Destruktive Aktionen wie Löschen erfordern eine Bestätigung. Fehlermeldungen werden direkt am jeweiligen Eingabefeld angezeigt.
+
+## 11. Nicht Bestandteil des MVP
+
+Die folgenden Funktionen werden zunächst nicht umgesetzt:
+
+- Lernendenkonten
+- dauerhaft gespeicherter persönlicher Lernfortschritt
+- komplexes Spaced-Repetition-System
+- automatische Bewertung eingegebener Antworten
+- verpflichtendes Eingabefeld für Antworten
+- automatische Spracherkennung
+- automatische Aussprachegenerierung
+- Audioverwaltung
+- freie Tags
+- gleichzeitige Auswahl mehrerer Themen
+- umfangreiche Rollen- und Rechteverwaltung
+- Registrierung und Benutzerverwaltung
+
+## 12. Noch offen – bewusst zurückgestellt
+
+Die folgenden Punkte wurden nicht weiter fachlich detailliert und bleiben für eine spätere Phase offen:
+
+1. konkrete Unterteilung eines Themas in Kapitel oder Abschnitte
 2. Benutzerkonten und persönlicher Lernfortschritt
-3. Freigabe-/Veröffentlichungsstatus von Inhalten
+3. Freigabe- und Veröffentlichungsstatus von Inhalten
 4. Umgang mit Audio und automatischer Sprachausgabe
-5. Format der strukturierten Speicherung im Detail, zum Beispiel konkrete Datenbanktabellen
-6. Umgang mit unklaren oder mehrfach möglichen Übersetzungen
-7. Verhalten bei einer frei gewählten Kartenanzahl, die größer als die Anzahl verfügbarer Karten ist
+5. konkrete Datenbanktabellen und Feldtypen im technischen Datenmodell
+6. detaillierter Umgang mit unklaren oder mehrfach möglichen Übersetzungen
+7. Verhalten bei einer Kartenanzahl, die größer als die Anzahl verfügbarer Karten ist
 
-## Arbeitsannahmen für die Diskussion
+## 13. Nächster Planungsschritt
 
-- Für ein erstes MVP sollte der Fokus auf textbasierten Lernkarten und einer schnellen Inhaltspflege liegen.
-- Ein komplexes Spaced-Repetition-System kann zunächst durch eine einfache Wiederholungslogik ersetzt werden.
-- Eine Trennung zwischen redaktionell gepflegten Inhalten und persönlichem Lernfortschritt ist sinnvoll, falls mehrere Lernende unterstützt werden sollen.
-- Hinweise werden standardmäßig erst nach der eigenen Übersetzungsleistung angeboten.
-- Die Selbstbewertung ist im MVP ausreichend; eine automatische Bewertung eingegebener Antworten ist zunächst nicht erforderlich.
-- Die Themenstruktur wird zunächst einfach gehalten; weitere Unterteilungen können später ergänzt werden.
-- Im MVP wird zunächst genau ein Thema pro Session ausgewählt.
-- Freie Tags sind für den ersten festen Vokabelbestand nicht erforderlich.
+Als nächstes soll ein konkreter technischer Entwurf erstellt werden:
+
+- Datenmodell für Themen und Lernkarten
+- Prisma-Schema
+- Seiten- und Routenstruktur
+- Komponentenstruktur
+- Session-Zustand für den Lernablauf
+- Admin-Login und Zugriffsschutz
+- Importformat für den ersten Vokabelbestand
+- UI-Wireframes für Startseite, Konfiguration, Lernkarte, Ergebnis und Admin-Bereich
