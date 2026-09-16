@@ -63,18 +63,34 @@ Mehrere deutsche Übersetzungen können innerhalb der deutschen Spalte hinterleg
 - Die Vorlage enthält sowohl einzelne Wörter/Ausdrücke als auch vollständige Sätze. Beide werden als Lernkarten unterstützt, sofern sie in den drei Spalten als eigener Eintrag vorgegeben sind.
 - Eintrag und Hinweis werden nicht automatisch aus zusätzlichen Beispielsätzen aufgespalten: Die vorgegebene Zuordnung der drei Spalten bleibt maßgeblich.
 
+## Ablauf einer Lernsession
+
+1. Die lernende Person wählt ein Thema bzw. einen Vokabelbestand aus.
+2. Sie wählt die Lernrichtung:
+   - Deutsch → Englisch
+   - Englisch → Deutsch
+   - zufällige Mischung beider Richtungen
+3. Optional kann die Anzahl der Karten festgelegt werden. Standardmäßig werden alle Karten des gewählten Themas verwendet.
+4. Die Karten werden in zufälliger Reihenfolge angezeigt.
+5. Die lernende Person überlegt die Übersetzung zunächst selbst und gibt sie im MVP nicht zwingend in ein Eingabefeld ein.
+6. Mit **„Auflösen“** werden die korrekte Übersetzung und – falls vorhanden – der Hinweis angezeigt.
+7. Die lernende Person bewertet sich selbst mit:
+   - **Gewusst**
+   - **Nicht gewusst**
+8. Danach wird die nächste Karte angezeigt.
+9. Jede Karte erscheint innerhalb einer Session höchstens einmal.
+10. Am Ende wird eine einfache Zusammenfassung angezeigt, beispielsweise die Anzahl der Karten sowie die Anzahl der gewussten und nicht gewussten Antworten. Diese Zusammenfassung wird im MVP nicht dauerhaft gespeichert.
+
 ## Noch offen – fachliche Entscheidungen
 
 1. Organisation der Inhalte, zum Beispiel Themen, Kapitel, Niveau und Tags
-2. Lernmodi und Ablauf einer Übung
-3. Bewertung einer Antwort und Umgang mit Fehlern
-4. Wiederholungssystem oder zunächst einfache zufällige Auswahl
-5. Benutzerkonten und persönlicher Lernfortschritt
-6. Freigabe-/Veröffentlichungsstatus von Inhalten
-7. Umgang mit Audio und automatischer Sprachausgabe
-8. Umfang und Bedienung des Admin-Bereichs
-9. Format der strukturierten Speicherung, zum Beispiel JSON-Datei oder Datenbank
-10. Umgang mit unklaren oder mehrfach möglichen Übersetzungen
+2. Benutzerkonten und persönlicher Lernfortschritt
+3. Freigabe-/Veröffentlichungsstatus von Inhalten
+4. Umgang mit Audio und automatischer Sprachausgabe
+5. Umfang und Bedienung des Admin-Bereichs
+6. Format der strukturierten Speicherung, zum Beispiel JSON-Datei oder Datenbank
+7. Umgang mit unklaren oder mehrfach möglichen Übersetzungen
+8. Verhalten bei einer frei gewählten Kartenanzahl, die größer als die Anzahl verfügbarer Karten ist
 
 ## Arbeitsannahmen für die Diskussion
 
@@ -82,3 +98,4 @@ Mehrere deutsche Übersetzungen können innerhalb der deutschen Spalte hinterleg
 - Ein komplexes Spaced-Repetition-System kann zunächst durch eine einfache Wiederholungslogik ersetzt werden.
 - Eine Trennung zwischen redaktionell gepflegten Inhalten und persönlichem Lernfortschritt ist sinnvoll, falls mehrere Lernende unterstützt werden sollen.
 - Hinweise werden standardmäßig erst nach der eigenen Übersetzungsleistung angeboten.
+- Die Selbstbewertung ist im MVP ausreichend; eine automatische Bewertung eingegebener Antworten ist zunächst nicht erforderlich.
