@@ -3,11 +3,6 @@
 Eine kleine Webanwendung zum Lernen englischer Vokabeln. Siehe [docs/fachkonzept.md](docs/fachkonzept.md)
 für die vollständige fachliche und technische Konzeption.
 
-> **Status:** Projektgrundlage (MVP-Fundament). Lernbereich, Session-Logik,
-> Admin-Bereich und Login sind noch **nicht** implementiert. Aktuell vorhanden
-> sind das Projektgerüst, das Datenmodell und ein Seed-Skript für den ersten
-> Vokabelbestand.
-
 ## Tech-Stack
 
 - [Next.js](https://nextjs.org) (App Router) + TypeScript
@@ -33,8 +28,14 @@ Die Anwendung läuft anschließend unter [http://localhost:3000](http://localhos
 
 ## Umgebungsvariablen
 
-Siehe [.env.example](.env.example). `DATABASE_URL` verweist auf die lokale
-SQLite-Datenbankdatei (`prisma/dev.db`) und wird nicht versioniert.
+Siehe [.env.example](.env.example).
+
+| Variable         | Zweck                                                          |
+| ---------------- | --------------------------------------------------------------- |
+| `DATABASE_URL`    | SQLite-Datenbankdatei (`prisma/dev.db`), nicht versioniert       |
+| `ADMIN_USERNAME`  | Benutzername des einzelnen Admin-Kontos                         |
+| `ADMIN_PASSWORD`  | Passwort des einzelnen Admin-Kontos                              |
+| `SESSION_SECRET`  | Signaturschlüssel für das Admin-Session-Cookie                  |
 
 ## Nützliche Skripte
 
@@ -62,12 +63,26 @@ Thema) und `VocabularyCard` (einzelne Lernkarte), siehe
 Greenwich“ an und befüllt es mit dem redaktionell bereinigten Vokabelbestand
 (siehe [docs/fachkonzept.md, Abschnitt 3 und 5](docs/fachkonzept.md#3-lerninhalte-und-vokabelbestand)).
 
-## Nicht Teil dieser Projektgrundlage
+## Seiten- und Routenstruktur
 
-Gemäß Fachkonzept sind folgende Bereiche bewusst noch nicht umgesetzt:
+| Route                            | Beschreibung                              |
+| --------------------------------- | ------------------------------------------ |
+| `/`                                | Startseite                                 |
+| `/learn`                           | Themenauswahl                              |
+| `/learn/setup`                     | Lernrichtung und Kartenanzahl              |
+| `/learn/session`                   | aktuelle Lernkarte                         |
+| `/learn/result`                    | Session-Ergebnis (nicht persistiert)       |
+| `/admin/login`                     | Admin-Anmeldung                            |
+| `/admin`                           | Themenübersicht (geschützt)                |
+| `/admin/topics/[topicId]`          | Lernkarten eines Themas (geschützt)        |
+| `/admin/cards/new`                 | neue Lernkarte anlegen (geschützt)         |
+| `/admin/cards/[cardId]/edit`       | Lernkarte bearbeiten/löschen (geschützt)   |
 
-- Lernbereich (`/learn/*`)
-- Session-Logik
-- Admin-Bereich
-- Login/Authentifizierung
+Der Lernsession-Zustand wird ausschließlich clientseitig im React-Context
+gehalten (siehe [docs/fachkonzept.md, Abschnitt 8.4](docs/fachkonzept.md#84-session-zustand))
+und geht bei einem Seiten-Reload absichtlich verloren. Der Admin-Bereich ist
+über ein signiertes, httpOnly-Session-Cookie geschützt
+([src/middleware.ts](src/middleware.ts)); Zugangsdaten kommen ausschließlich
+aus Umgebungsvariablen (siehe [docs/fachkonzept.md, Abschnitt 11](docs/fachkonzept.md#11-authentifizierung-und-berechtigungen)).
+
 
