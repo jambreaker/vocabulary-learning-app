@@ -46,17 +46,48 @@ export default async function AdminTopicDetailPage({
       ) : (
         <ul className="flex flex-col gap-3">
           {topic.cards.map((card) => (
-            <li key={card.id}>
+            <li
+              key={card.id}
+              className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-start sm:justify-between"
+            >
+              <div className="flex flex-col gap-2">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                    Englisch
+                  </p>
+                  <p className="font-medium text-slate-900">
+                    {card.englishText}
+                  </p>
+                  {card.pronunciation && (
+                    <p className="text-sm text-slate-500">
+                      Aussprache: {card.pronunciation}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                    Deutsch
+                  </p>
+                  <p className="text-slate-700">
+                    {toTranslationsArray(card.germanTranslations).join("; ")}
+                  </p>
+                </div>
+                {card.hint && (
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                      Hinweis
+                    </p>
+                    <p className="whitespace-pre-line text-slate-700">
+                      {card.hint}
+                    </p>
+                  </div>
+                )}
+              </div>
               <Link
                 href={`/admin/cards/${card.id}/edit`}
-                className="flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:border-indigo-300 hover:bg-indigo-50"
+                className="inline-flex shrink-0 items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
               >
-                <span className="font-medium text-slate-900">
-                  {card.englishText}
-                </span>
-                <span className="mt-1 text-sm text-slate-500">
-                  {toTranslationsArray(card.germanTranslations).join("; ")}
-                </span>
+                Bearbeiten
               </Link>
             </li>
           ))}
