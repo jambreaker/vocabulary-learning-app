@@ -81,16 +81,51 @@ Mehrere deutsche Übersetzungen können innerhalb der deutschen Spalte hinterleg
 9. Jede Karte erscheint innerhalb einer Session höchstens einmal.
 10. Am Ende wird eine einfache Zusammenfassung angezeigt, beispielsweise die Anzahl der Karten sowie die Anzahl der gewussten und nicht gewussten Antworten. Diese Zusammenfassung wird im MVP nicht dauerhaft gespeichert.
 
+## Technologieentscheidungen für das MVP
+
+- **Framework:** Next.js mit App Router
+- **Programmiersprache:** TypeScript
+- **Styling:** Tailwind CSS
+- **Datenzugriff:** Prisma ORM
+- **Datenbank:** SQLite für den Start
+- **Architektur:** gemeinsamer Monolith für Lernbereich und Admin-Bereich; keine separate Backend-Anwendung im MVP
+- **Strukturierte Speicherung:** Vokabeln werden in der Datenbank gespeichert und nicht im Anwendungscode hardcodiert
+- **Erweiterbarkeit:** Ein späterer Wechsel auf PostgreSQL und die Ergänzung einer Benutzerverwaltung sollen möglich bleiben
+
+## UI/UX-Entscheidungen für das MVP
+
+- Die Anwendung wird **mobile first** gestaltet und soll auf Smartphone, Tablet und Desktop funktionieren.
+- Der Lernbereich verwendet einen klaren Schritt-für-Schritt-Ablauf mit einer Lernkarte pro Bildschirm.
+- Die Startseite enthält die wichtigsten Aktionen:
+  - Anwendungstitel und kurze Erklärung
+  - **„Lernen starten“**
+  - **„Admin-Bereich“** für berechtigte Personen
+- Vor einer Session werden Thema, Lernrichtung und optional die Kartenanzahl ausgewählt.
+- Während des Lernens werden die Abfrage, der Fortschritt und die zentrale Aktion **„Auflösen“** übersichtlich dargestellt.
+- Nach dem Auflösen werden Übersetzung und – falls vorhanden – der Hinweis angezeigt.
+- Die Lernkarte bietet anschließend die Aktionen **„Gewusst“** und **„Nicht gewusst“**.
+- Am Ende wird eine Session-Zusammenfassung mit Kartenanzahl sowie gewussten und nicht gewussten Antworten angezeigt.
+- Lernende benötigen im MVP kein Benutzerkonto.
+- Der Admin-Bereich ist durch einen einfachen Login geschützt.
+- Der Admin-Bereich umfasst zunächst:
+  1. Themenübersicht mit Anzahl der Lernkarten
+  2. Lernkartenübersicht mit Englisch, Deutsch und Hinweisstatus
+  3. Bearbeitungsformular für Englisch inklusive Aussprache, Deutsch und Hinweis
+- Die Aussprache wird technisch separat gespeichert, im Admin-Bereich aber unter der ersten fachlichen Spalte „Englisch inklusive Aussprache“ gruppiert.
+- Das Design verwendet große, gut lesbare Schrift, klare Primäraktionen, ausreichenden Kontrast und große Touch-Ziele.
+- Die Bedienung soll per Tastatur und Touch möglich sein.
+- Der Lernbereich bleibt frei von überflüssigen Animationen.
+- Löschen im Admin-Bereich erfordert eine Bestätigung.
+
 ## Noch offen – fachliche Entscheidungen
 
 1. Organisation der Inhalte, zum Beispiel Themen, Kapitel, Niveau und Tags
 2. Benutzerkonten und persönlicher Lernfortschritt
 3. Freigabe-/Veröffentlichungsstatus von Inhalten
 4. Umgang mit Audio und automatischer Sprachausgabe
-5. Umfang und Bedienung des Admin-Bereichs
-6. Format der strukturierten Speicherung, zum Beispiel JSON-Datei oder Datenbank
-7. Umgang mit unklaren oder mehrfach möglichen Übersetzungen
-8. Verhalten bei einer frei gewählten Kartenanzahl, die größer als die Anzahl verfügbarer Karten ist
+5. Format der strukturierten Speicherung im Detail, zum Beispiel konkrete Datenbanktabellen
+6. Umgang mit unklaren oder mehrfach möglichen Übersetzungen
+7. Verhalten bei einer frei gewählten Kartenanzahl, die größer als die Anzahl verfügbarer Karten ist
 
 ## Arbeitsannahmen für die Diskussion
 
@@ -99,3 +134,6 @@ Mehrere deutsche Übersetzungen können innerhalb der deutschen Spalte hinterleg
 - Eine Trennung zwischen redaktionell gepflegten Inhalten und persönlichem Lernfortschritt ist sinnvoll, falls mehrere Lernende unterstützt werden sollen.
 - Hinweise werden standardmäßig erst nach der eigenen Übersetzungsleistung angeboten.
 - Die Selbstbewertung ist im MVP ausreichend; eine automatische Bewertung eingegebener Antworten ist zunächst nicht erforderlich.
+- Die Themenstruktur wird zunächst einfach gehalten; weitere Unterteilungen können später ergänzt werden.
+- Im MVP wird zunächst genau ein Thema pro Session ausgewählt.
+- Freie Tags sind für den ersten festen Vokabelbestand nicht erforderlich.
