@@ -13,19 +13,24 @@ Eine kleine Webanwendung unterstützt beim Lernen englischer Vokabeln. Lerninhal
 - Inhalte werden strukturiert gespeichert.
 - Es gibt einen möglichst einfachen Admin-Bereich zur Pflege der Inhalte.
 - Die Anwendung soll zunächst klein und überschaubar bleiben.
+- Die Anwendung wird zunächst so geplant, dass später mehrere Lernende möglich sind, ohne diese Funktion im MVP vollständig umzusetzen.
+- Beide Lernrichtungen werden unterstützt:
+  - Deutsch → Englisch
+  - Englisch → Deutsch
+- Vor dem Start einer Lernsession wählt die lernende Person die Richtung aus.
+- Zusätzlich gibt es eine Option für eine zufällige Mischung beider Richtungen innerhalb einer Lernsession.
 
 ## Noch offen – fachliche Entscheidungen
 
-1. Zielgruppe und Nutzungskontext
-2. Lernrichtung(en), zum Beispiel Deutsch → Englisch und/oder Englisch → Deutsch
-3. Welche Angaben ein Lerninhalt besitzt
-4. Organisation der Inhalte, zum Beispiel Themen, Niveau und Tags
-5. Lernmodi und Ablauf einer Übung
-6. Bewertung einer Antwort und Umgang mit Fehlern
-7. Wiederholungssystem oder zunächst einfache zufällige Auswahl
-8. Benutzerkonten und persönlicher Lernfortschritt
-9. Freigabe-/Veröffentlichungsstatus von Inhalten
-10. Umgang mit Audio, Beispielen und Varianten
+1. Welche Angaben ein Lerninhalt besitzt
+2. Organisation der Inhalte, zum Beispiel Themen, Niveau und Tags
+3. Lernmodi und Ablauf einer Übung
+4. Bewertung einer Antwort und Umgang mit Fehlern
+5. Wiederholungssystem oder zunächst einfache zufällige Auswahl
+6. Benutzerkonten und persönlicher Lernfortschritt
+7. Freigabe-/Veröffentlichungsstatus von Inhalten
+8. Umgang mit Audio, Beispielen und Varianten
+9. Umfang und Bedienung des Admin-Bereichs
 
 ## Arbeitsannahmen für die Diskussion
 
