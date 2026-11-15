@@ -355,6 +355,48 @@ const cards: Array<{
   },
 ];
 
+/** Lektion "Pick-up B - This is fun!" (Vorlage: Schulbuchseiten, Fotos vom 15.11.2026). */
+const funCards: typeof cards = [
+  { englishText: "day", pronunciation: "/deɪ/", germanTranslations: ["Tag"], hint: "It's a nice day for the boating lake. - OK, let's go to the park." },
+  { englishText: "happy", pronunciation: "/ˈhæpi/", germanTranslations: ["glücklich", "froh", "fröhlich"], hint: "Lou is happy." },
+  { englishText: "skates (pl)", pronunciation: "/skeɪts/", germanTranslations: ["Inlineskates", "Rollschuhe", "Schlittschuhe"] },
+  { englishText: "can't", pronunciation: "/kɑːnt/", germanTranslations: ["kann nicht", "können nicht"], hint: "Where's Mr Fluff? I can't see him.\n! Achtung Aussprache: can /æ/ - can't /ɑː/" },
+  { englishText: "to meet", pronunciation: "/miːt/", germanTranslations: ["treffen", "sich treffen"], hint: "Where can I meet you? - Let's meet in the park." },
+  { englishText: "to show", pronunciation: "/ʃəʊ/", germanTranslations: ["zeigen"], hint: "Please show me your new skates." },
+  { englishText: "game", pronunciation: "/geɪm/", germanTranslations: ["Spiel"] },
+  { englishText: "to want (to)", pronunciation: "/ˈwɒnt tə/", germanTranslations: ["wollen", "mögen"], hint: "I want to play a game." },
+  { englishText: "to play", pronunciation: "/pleɪ/", germanTranslations: ["spielen"], hint: "Let's play football. - No, let's play a different game." },
+  { englishText: "boring", pronunciation: "/ˈbɔːrɪŋ/", germanTranslations: ["langweilig"], hint: "That's boring! ↔ That's fun!" },
+  { englishText: "You're into sports.", pronunciation: "/jɔːr ˌɪntə ˈspɔːts/", germanTranslations: ["Du magst doch Sport.", "Du stehst doch auf Sport."], hint: "You're into computer games? I'm into inline skating." },
+  { englishText: "Try skating!", pronunciation: "/ˌtraɪ ˈskeɪtɪŋ/", germanTranslations: ["Versuch es mal mit Inlineskating.", "Probier mal Inlineskating."] },
+  { englishText: "to skate", pronunciation: "/skeɪt/", germanTranslations: ["Inlineskates fahren", "Schlittschuh laufen"], hint: "to skate → skates → skating" },
+  { englishText: "fast", pronunciation: "/fɑːst/", germanTranslations: ["schnell"], hint: "Not so fast, Olivia! Skating isn't easy." },
+  { englishText: "so", pronunciation: "/səʊ/", germanTranslations: ["so", "also"], hint: "I like rabbits. They're so quiet." },
+  { englishText: "I'm sorry!", pronunciation: "/ˌaɪm ˈsɒri/", germanTranslations: ["Tut mir leid!"] },
+  { englishText: "I'm fine.", pronunciation: "/ˌaɪm ˈfaɪn/", germanTranslations: ["Mir geht's gut."], hint: "= I'm OK." },
+  { englishText: "cute", pronunciation: "/kjuːt/", germanTranslations: ["niedlich", "süß"], hint: "I like Lou. She's so cute!" },
+  { englishText: "lucky charm", pronunciation: "/ˌlʌki ˈtʃɑːm/", germanTranslations: ["Glücksbringer", "Talisman"], hint: "Holly's lucky charm is pink." },
+  { englishText: "text message", pronunciation: "/ˈtekst ˌmesɪdʒ/", germanTranslations: ["SMS", "Kurznachricht"], hint: "! Du kannst text message sagen oder einfach text." },
+  { englishText: "reading", pronunciation: "/ˈriːdɪŋ/", germanTranslations: ["Lesen"], hint: "reading → to read" },
+  { englishText: "music", pronunciation: "/ˈmjuːzɪk/", germanTranslations: ["Musik"], hint: "! Achtung Aussprache.\nFr. musique (f); Lat. musica (f)" },
+  { englishText: "to paint", pronunciation: "/peɪnt/", germanTranslations: ["anmalen", "malen"] },
+  { englishText: "to go swimming", pronunciation: "/ˌgəʊ ˈswɪmɪŋ/", germanTranslations: ["Schwimmen gehen"], hint: "Let's go swimming. Swimming is fun. - I like it too." },
+  { englishText: "to read", pronunciation: "/riːd/", germanTranslations: ["lesen"], hint: "This text is in English. Can you read it?" },
+  { englishText: "book", pronunciation: "/bʊk/", germanTranslations: ["Buch"] },
+  { englishText: "to take photos", pronunciation: "/ˌteɪk ˈfəʊtəʊz/", germanTranslations: ["fotografieren", "Fotos machen"], hint: "Please take a photo of me!" },
+  {
+    englishText: "to watch",
+    pronunciation: "/wɒtʃ/",
+    germanTranslations: ["beobachten", "(sich) ansehen", "zuschauen"],
+    hint: "! Beachte den Unterschied: Help! I can see a mouse! = sehen\nLet's look at your photos. = anschauen\nHey, Olivia, I can skate! Watch! = zuschauen",
+  },
+  { englishText: "card", pronunciation: "/kɑːd/", germanTranslations: ["Karte", "Spielkarte"], hint: "Let's play cards." },
+  { englishText: "magazine", pronunciation: "/ˌmægəˈziːn/", germanTranslations: ["Zeitschrift"], hint: "Fr. magazine (m)" },
+  { englishText: "to watch TV", pronunciation: "/ˌwɒtʃ tiːˈviː/", germanTranslations: ["fernsehen"], hint: "Let's watch TV." },
+  { englishText: "DVD", pronunciation: "/ˌdiːviːˈdiː/", germanTranslations: ["DVD"] },
+  { englishText: "bike", pronunciation: "/baɪk/", germanTranslations: ["Fahrrad"] },
+  { englishText: "silly", pronunciation: "/ˈsɪli/", germanTranslations: ["dumm", "doof", "albern"], hint: "That's a silly game!" },
+];
 
 async function main() {
   const topic = await prisma.topic.upsert({
@@ -380,8 +422,26 @@ async function main() {
     })),
   });
 
+  const funTopic = await prisma.topic.upsert({
+    where: { id: "pick-up-b-this-is-fun" },
+    update: { title: "This is fun!" },
+    create: { id: "pick-up-b-this-is-fun", title: "This is fun!" },
+  });
+
+  await prisma.vocabularyCard.deleteMany({ where: { topicId: funTopic.id } });
+
+  await prisma.vocabularyCard.createMany({
+    data: funCards.map((card) => ({
+      topicId: funTopic.id,
+      englishText: card.englishText,
+      pronunciation: card.pronunciation,
+      germanTranslations: card.germanTranslations,
+      hint: card.hint,
+    })),
+  });
+
   console.log(
-    `Seed abgeschlossen: Thema "${topic.title}" mit ${cards.length} Lernkarten.`
+    `Seed abgeschlossen: Thema "${topic.title}" mit ${cards.length} Lernkarten, Thema "${funTopic.title}" mit ${funCards.length} Lernkarten.`
   );
 }
 
