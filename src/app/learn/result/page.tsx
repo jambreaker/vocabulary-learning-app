@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLearning } from "../learning-context";
+import { calculateGrade } from "@/lib/grade";
 
 export default function LearnResultPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function LearnResultPage() {
     (result) => result.assessment === "KNOWN"
   ).length;
   const unknownCount = results.length - knownCount;
+  const grade = calculateGrade(knownCount, results.length);
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center gap-6 px-4 py-12 text-center">
@@ -30,6 +32,11 @@ export default function LearnResultPage() {
         <h1 className="text-2xl font-semibold text-slate-900">
           Session abgeschlossen
         </h1>
+        <div className="mt-6 rounded-xl bg-indigo-50 py-4">
+          <p className="text-sm text-slate-600">Deine Note</p>
+          <p className="text-5xl font-bold text-indigo-700">{grade.display}</p>
+          <p className="text-base font-medium text-indigo-700">{grade.label}</p>
+        </div>
         <dl className="mt-6 flex flex-col gap-2 text-lg text-slate-700">
           <div className="flex justify-between">
             <dt>Karten gelernt</dt>
