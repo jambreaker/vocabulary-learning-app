@@ -28,7 +28,9 @@ export async function loginAction(
   cookieStore.set(ADMIN_SESSION_COOKIE_NAME, value, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure:
+      process.env.NODE_ENV === "production" &&
+      process.env.INSECURE_COOKIES !== "true",
     path: "/",
     expires: expiresAt,
   });
